@@ -12,3 +12,53 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id         String    @id @default(uuid())
+  first_name       String
+  last_name   String
+  email   String @unique
+  username   String @unique
+  password   String
+  login_attempts Int       @default(0) @map("login_attempts")
+  isBlocked Boolean   @default(false) @map("is_blocked")
+  enterpriseId   Int?      @map("enterprise_id") 
+  role String @default("")  
+  active Boolean @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  lastLogin      DateTime? @map("last_login")   
+
+  permission Permission[]
+  permissionUser UserPermission[]
+  
+  @@map("users")
+}
+
+model Permission {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?  
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user User @relation(fields: [create_id], references: [id])
+  create_id String
+
+  users UserPermission[]
+
+  @@map("permission")
+}
+
+model UserPermission {
+  
+  user_id      String      @map("user_id")
+  permission_id Int      @map("permission_id")
+  assigned_at  DateTime @default(now()) @map("assigned_at")
+
+  user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, permission_id])
+  @@map("user_permissions")
+}
