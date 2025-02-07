@@ -5,7 +5,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { ListUserUserNameUseCase } from '../usecases/list-user-username.usercase';
-import { EncryptedPassword } from 'src/utils/users/encrypted-password';
+import { EncryptedPassword } from 'src/users/utils/users/encrypted-password';
 import { UpdateUserUseCase } from '../usecases/update-user.usecase';
 import { DeleteUserUseCase } from '../usecases/delete-user.usecase';
 import { ListUserIdUseCase } from '../usecases/list-user-id.usecase';

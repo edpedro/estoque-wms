@@ -31,6 +31,8 @@ model User {
 
   permission Permission[]
   permissionUser UserPermission[]
+  company Company[]
+  companyUser UserCompany[]
   
   @@map("users")
 }
@@ -61,4 +63,32 @@ model UserPermission {
 
   @@id([user_id, permission_id])
   @@map("user_permissions")
+}
+
+model Company {
+  id           Int     @id @default(autoincrement())
+  name         String  @db.VarChar(100)
+  cnpj         String  @unique @db.VarChar(14)   
+  isBlocked    Boolean @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user User @relation(fields: [create_id], references: [id])
+  create_id String
+
+  users UserCompany[]
+
+  @@map("company")
+}
+
+model UserCompany {
+  companyId  Int      @map("company_id")
+  userId     String   @map("user_id")
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([companyId, userId])
+  @@map("company_users")
 }
