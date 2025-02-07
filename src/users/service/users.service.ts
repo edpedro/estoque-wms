@@ -39,9 +39,31 @@ export class UsersService {
       throw new HttpException('Usuario já cadastrado', HttpStatus.BAD_REQUEST);
     }
 
-    const data = await this.createUserUseCase.execute(createUserDto);
+    if (createUserDto.role !== 'admin') {
+      if (!createUserDto.permission_id?.length) {
+        throw new HttpException(
+          'Usuario precisar cadastrar permissão',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
 
-    return data;
+    try {
+      const data = await this.createUserUseCase.execute(createUserDto);
+
+      return data;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new HttpException(
+          'Erro ao criar usuário: uma ou mais permissões não existem',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      throw new HttpException(
+        'Erro interno ao criar usuário',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findAll() {

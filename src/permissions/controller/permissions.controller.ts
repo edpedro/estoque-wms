@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PermissionService } from '../service/permissions.service';
 import { CreatePermissionDto } from '../dto/create-permission.dto';
 import { UpdatePermissionDto } from '../dto/update-permission.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('permissions')
+@UseGuards(AuthGuard('jwt'))
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionService) {}
 

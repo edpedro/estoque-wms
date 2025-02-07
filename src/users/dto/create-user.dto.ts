@@ -5,8 +5,10 @@ import {
   IsEmail,
   IsInt,
   IsBoolean,
-  IsJSON,
+  IsArray,
+  IsNumber,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString({ message: "O campo 'Nome' deve ser uma string." })
@@ -48,4 +50,13 @@ export class CreateUserDto {
   @IsBoolean({ message: "O campo 'active' deve ser um booleano." })
   @IsOptional()
   readonly active?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => value.map(Number))
+  @IsNumber(
+    {},
+    { each: true, message: 'Cada elemento da lista deve ser um número.' },
+  )
+  readonly permission_id?: number[];
 }

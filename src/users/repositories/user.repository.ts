@@ -12,10 +12,50 @@ export class UserRepository {
   async createUser(data: CreateUserDto): Promise<UserDto> {
     const hashedPassword = await EncryptedPassword(data.password);
 
-    const user = this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
-        ...data,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        username: data.username,
         password: hashedPassword,
+        role: data.role,
+        active: data.active,
+        isBlocked: data.isBlocked,
+        login_attempts: data.login_attempts,
+        permissionUser: data.permission_id?.length
+          ? {
+              create: data.permission_id.map((permissionId) => ({
+                permission: { connect: { id: permissionId } },
+              })),
+            }
+          : undefined,
+      },
+      select: {
+        id: true,
+        first_name: true,
+        last_name: true,
+        email: true,
+        username: true,
+        role: true,
+        isBlocked: true,
+        login_attempts: true,
+        enterpriseId: true,
+        active: true,
+        created_at: true,
+        updated_at: true,
+        lastLogin: true,
+        permissionUser: {
+          select: {
+            permission: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+              },
+            },
+          },
+        },
       },
     });
     return user;
@@ -26,6 +66,9 @@ export class UserRepository {
       where: {
         email,
       },
+      include: {
+        permissionUser: true,
+      },
     });
   }
 
@@ -33,6 +76,9 @@ export class UserRepository {
     return this.prisma.user.findFirst({
       where: {
         username,
+      },
+      include: {
+        permissionUser: true,
       },
     });
   }
@@ -56,6 +102,17 @@ export class UserRepository {
         created_at: true,
         updated_at: true,
         lastLogin: true,
+        permissionUser: {
+          select: {
+            permission: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+              },
+            },
+          },
+        },
       },
     });
     return user;
@@ -77,6 +134,17 @@ export class UserRepository {
         created_at: true,
         updated_at: true,
         lastLogin: true,
+        permissionUser: {
+          select: {
+            permission: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+              },
+            },
+          },
+        },
       },
     });
 
