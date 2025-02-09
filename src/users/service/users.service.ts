@@ -40,9 +40,20 @@ export class UsersService {
     }
 
     if (createUserDto.role !== 'admin') {
-      if (!createUserDto.permission_id?.length) {
+      if (
+        !createUserDto.permission_id ||
+        createUserDto.permission_id.length === 0
+      ) {
         throw new HttpException(
-          'Usuario precisar cadastrar permissão',
+          'Usuário precisa cadastrar permissão',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      // Verifica se companyId foi fornecido e não está vazio
+      if (!createUserDto.companyId || createUserDto.companyId.length === 0) {
+        throw new HttpException(
+          'Usuário precisa cadastrar empresa',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -55,7 +66,7 @@ export class UsersService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new HttpException(
-          'Erro ao criar usuário: uma ou mais permissões não existem',
+          'Erro ao criar usuário: Favor verificar permissão e empresa estão corretos',
           HttpStatus.BAD_REQUEST,
         );
       }

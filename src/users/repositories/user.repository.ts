@@ -30,6 +30,13 @@ export class UserRepository {
               })),
             }
           : undefined,
+        companyUser: data.companyId?.length
+          ? {
+              create: data.companyId.map((company_Id) => ({
+                company: { connect: { id: company_Id } },
+              })),
+            }
+          : undefined,
       },
       select: {
         id: true,
@@ -56,6 +63,17 @@ export class UserRepository {
             },
           },
         },
+        companyUser: {
+          select: {
+            company: {
+              select: {
+                id: true,
+                cnpj: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
     return user;
@@ -68,6 +86,7 @@ export class UserRepository {
       },
       include: {
         permissionUser: true,
+        companyUser: true,
       },
     });
   }
@@ -79,6 +98,7 @@ export class UserRepository {
       },
       include: {
         permissionUser: true,
+        companyUser: true,
       },
     });
   }
@@ -109,6 +129,17 @@ export class UserRepository {
                 id: true,
                 name: true,
                 description: true,
+              },
+            },
+          },
+        },
+        companyUser: {
+          select: {
+            company: {
+              select: {
+                id: true,
+                cnpj: true,
+                name: true,
               },
             },
           },
@@ -145,6 +176,17 @@ export class UserRepository {
             },
           },
         },
+        companyUser: {
+          select: {
+            company: {
+              select: {
+                id: true,
+                cnpj: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -171,6 +213,28 @@ export class UserRepository {
         created_at: true,
         updated_at: true,
         lastLogin: true,
+        permissionUser: {
+          select: {
+            permission: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+              },
+            },
+          },
+        },
+        companyUser: {
+          select: {
+            company: {
+              select: {
+                id: true,
+                cnpj: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
   }

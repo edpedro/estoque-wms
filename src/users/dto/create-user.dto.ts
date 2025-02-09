@@ -59,4 +59,13 @@ export class CreateUserDto {
     { each: true, message: 'Cada elemento da lista deve ser um número.' },
   )
   readonly permission_id?: number[];
+
+  @IsOptional()
+  @IsArray()
+  @Transform(({ value }) => value.map(Number))
+  @IsNumber(
+    {},
+    { each: true, message: 'Cada elemento da lista deve ser um número.' },
+  )
+  readonly companyId?: number[];
 }
