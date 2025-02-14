@@ -33,26 +33,32 @@ export class RolesGuard implements CanActivate {
       throw new UnauthorizedException('Token de autenticação ausente');
     }
 
-    const payload = await this.jwtService.verifyAsync(token, {
-      secret: process.env.SECRET_KEY,
-    });
+    try {
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: process.env.SECRET_KEY,
+      });
 
-    if (!payload) {
-      throw new UnauthorizedException('Dados invalidos');
-    }
+      if (!payload) {
+        throw new UnauthorizedException('Dados invalidos');
+      }
 
-    const hasPermissions = requiredRoles.every((requiredPermission) =>
-      payload.permission.some(
-        (userPermission) => userPermission.name === requiredPermission,
-      ),
-    );
+      const hasPermissions = requiredRoles.every((requiredPermission) =>
+        payload.permission.some(
+          (userPermission) => userPermission.name === requiredPermission,
+        ),
+      );
 
-    if (!hasPermissions) {
+      if (!hasPermissions) {
+        throw new ForbiddenException(
+          'Você não tem permissão para acessar este recurso.',
+        );
+      }
+
+      return true;
+    } catch (error) {
       throw new ForbiddenException(
         'Você não tem permissão para acessar este recurso.',
       );
     }
-
-    return true;
   }
 }
