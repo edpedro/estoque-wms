@@ -50,7 +50,6 @@ export class UsersService {
         );
       }
 
-      // Verifica se companyId foi fornecido e não está vazio
       if (!createUserDto.companyId || createUserDto.companyId.length === 0) {
         throw new HttpException(
           'Usuário precisa cadastrar empresa',
@@ -103,8 +102,29 @@ export class UsersService {
       const dataToUpdate: any = {
         first_name: data.first_name,
         last_name: data.last_name,
+        email: data.email,
         username: data.username,
         role: data.role,
+        isBlocked: data.isBlocked,
+        active: data.active,
+        // Sempre limpa as permissões existentes e atualiza com as novas (mesmo se vazio)
+        permissionUser: {
+          deleteMany: {}, // Remove todas as permissões existentes
+          create: data.permission_id?.length
+            ? data.permission_id.map((permissionId) => ({
+                permission: { connect: { id: permissionId } },
+              }))
+            : [], // Se não houver permissões, cria um array vazio
+        },
+        // Sempre limpa as empresas existentes e atualiza com as novas (mesmo se vazio)
+        companyUser: {
+          deleteMany: {}, // Remove todas as empresas existentes
+          create: data.companyId?.length
+            ? data.companyId.map((companyId) => ({
+                company: { connect: { id: companyId } },
+              }))
+            : [], // Se não houver empresas, cria um array vazio
+        },
       };
 
       if (data.password) {

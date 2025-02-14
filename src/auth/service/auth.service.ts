@@ -16,10 +16,14 @@ export class AuthService {
     const payload = {
       sub: user.id,
       first_name: user.first_name,
+      last_name: user.last_name,
       email: user.email,
       username: user.username,
       role: user.role,
       isBlocked: user.isBlocked,
+      active: user.active,
+      permission: user.permissions,
+      companies: user.companies,
     };
 
     return {
@@ -41,7 +45,7 @@ export class AuthService {
     }
 
     // Verifica se o usuário existe e está ativo
-    if (!user || !user.active) {
+    if (!user || !user.active || !user.password) {
       return null;
     }
 

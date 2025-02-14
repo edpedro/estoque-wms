@@ -28,5 +28,6 @@ import { LocalStrategy } from './strategy/local.strategy';
     UserRepository,
     ListUserUserNameUseCase,
   ],
+  exports: [JwtModule],
 })
 export class AuthModule {}
