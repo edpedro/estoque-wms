@@ -33,7 +33,7 @@ model User {
   permissionUser UserPermission[]
   company Company[]
   companyUser UserCompany[]
-  items Item[]
+  items Items[]
   
   @@map("users")
 }
@@ -78,7 +78,7 @@ model Company {
   create_id String
 
   users UserCompany[]
-  items Item[]
+  items Items[]
 
   @@map("company")
 }
@@ -95,13 +95,13 @@ model UserCompany {
   @@map("company_users")
 }
 
-model Item {
+model Items {
   id          Int      @id @default(autoincrement())
   code        String   @unique
   description String
   category    String?
   companyId   Int?
-  createdBy   Int?   
+  createdBy   String?   
   weight      Decimal?
   isBlocked   Boolean  @default(false)
   created_at  DateTime @default(now())
