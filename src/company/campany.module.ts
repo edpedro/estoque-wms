@@ -9,6 +9,7 @@ import { UpdateCompanyUseCase } from './usecases/update-company.usecase';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CompanyRepository } from './repositories/company.repository';
 import { ListCompanyCNPJUseCase } from './usecases/list-company-cnpj.usecase';
+import { BlockedCompanyUseCase } from './usecases/blocked-company.usecase';
 
 @Module({
   controllers: [CampanyController],
@@ -22,6 +23,7 @@ import { ListCompanyCNPJUseCase } from './usecases/list-company-cnpj.usecase';
     ListCompanyUseCase,
     UpdateCompanyUseCase,
     ListCompanyCNPJUseCase,
+    BlockedCompanyUseCase,
   ],
 })
 export class CampanyModule {}

@@ -43,6 +43,12 @@ export class CampanyController {
     return this.companyService.update(+id, updateCompanyDto);
   }
 
+  @Patch('blocked/:id')
+  @Roles('company_blocked')
+  blocked(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
+    return this.companyService.blocked(+id, updateCompanyDto);
+  }
+
   @Delete(':id')
   @Roles('company_delete')
   remove(@Param('id') id: string) {

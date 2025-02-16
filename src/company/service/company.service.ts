@@ -8,6 +8,7 @@ import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { ListCompanyCNPJUseCase } from '../usecases/list-company-cnpj.usecase';
 import { cnpj } from 'cpf-cnpj-validator';
+import { BlockedCompanyUseCase } from '../usecases/blocked-company.usecase';
 
 @Injectable()
 export class CompanyService {
@@ -18,6 +19,7 @@ export class CompanyService {
     private readonly updateCompanyUseCase: UpdateCompanyUseCase,
     private readonly deleteCompanyUseCase: DeleteCompanyUseCase,
     private readonly listCompanyCNPJUseCase: ListCompanyCNPJUseCase,
+    private readonly blockedCompanyUseCase: BlockedCompanyUseCase,
   ) {}
 
   async create(createCompanyDto: CreateCompanyDto) {
@@ -65,6 +67,21 @@ export class CompanyService {
     } catch (error) {
       console.error(error);
       throw new HttpException('Empresa não atualizada', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async blocked(id: number, data: UpdateCompanyDto) {
+    const companyExist = await this.listCompanyIdUseCase.execute(id);
+    if (!companyExist) {
+      throw new HttpException('Empresa não encontrada', HttpStatus.NOT_FOUND);
+    }
+
+    try {
+      const blockedCompany = await this.blockedCompanyUseCase.execute(id, data);
+      return blockedCompany;
+    } catch (error) {
+      console.error(error);
+      throw new HttpException('Bloqueo não atualizado', HttpStatus.BAD_REQUEST);
     }
   }
 

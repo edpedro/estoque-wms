@@ -84,6 +84,24 @@ export class CompanyRepository {
     });
   }
 
+  async blockedCompany(id: number, data: UpdateCompanyDto) {
+    return await this.prisma.company.update({
+      where: { id },
+      data: {
+        isBlocked: data.isBlocked,
+      },
+      select: {
+        id: true,
+        name: true,
+        cnpj: true,
+        isBlocked: true,
+        create_id: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
+  }
+
   async removeCompany(id: number) {
     return await this.prisma.company.delete({
       where: { id },
