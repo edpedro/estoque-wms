@@ -1,27 +1,29 @@
 import { Module } from '@nestjs/common';
-import { CompanyService } from './service/items.service';
+import { ItemsService } from './service/items.service';
 import { ItemsController } from './controller/items.controller';
-import { CreateCompanyUseCase } from './usecases/create-items.usecase';
-import { DeleteCompanyUseCase } from './usecases/delete-items.usecase';
-import { ListCompanyIdUseCase } from './usecases/list-items-id.usecase';
-import { ListCompanyUseCase } from './usecases/list-items.usecase';
-import { UpdateCompanyUseCase } from './usecases/update-items.usecase';
+import { CreateItemsUseCase } from './usecases/create-items.usecase';
+import { DeleteItemsUseCase } from './usecases/delete-items.usecase';
+import { ListItemsIdUseCase } from './usecases/list-items-id.usecase';
+import { ListItemsUseCase } from './usecases/list-items.usecase';
+import { UpdateItemsUseCase } from './usecases/update-items.usecase';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CompanyRepository } from './repositories/items.repository';
-import { ListCompanyCNPJUseCase } from './usecases/list-items-cnpj.usecase';
+import { ItemsRepository } from './repositories/items.repository';
+import { ListItemsCodeUseCase } from './usecases/list-items-code.usecase';
+import { BlockedItemsUseCase } from './usecases/blocked-items.usecase';
 
 @Module({
   controllers: [ItemsController],
   providers: [
-    CompanyService,
+    ItemsService,
     PrismaService,
-    CompanyRepository,
-    CreateCompanyUseCase,
-    DeleteCompanyUseCase,
-    ListCompanyIdUseCase,
-    ListCompanyUseCase,
-    UpdateCompanyUseCase,
-    ListCompanyCNPJUseCase,
+    ItemsRepository,
+    CreateItemsUseCase,
+    DeleteItemsUseCase,
+    ListItemsIdUseCase,
+    ListItemsUseCase,
+    UpdateItemsUseCase,
+    ListItemsCodeUseCase,
+    BlockedItemsUseCase,
   ],
 })
 export class ItemsModule {}

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ItemsRepository } from '../repositories/items.repository';
-import { ItemsDto } from '../dto/items.dto';
+import { UpdateItemsDto } from '../dto/update-items.dto';
 
 @Injectable()
-export class ListItemsIdUseCase {
+export class BlockedItemsUseCase {
   constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  async execute(id: number): Promise<ItemsDto | null> {
-    return this.itemsRepository.findById(id);
+  async execute(id: number, data: UpdateItemsDto) {
+    return this.itemsRepository.blockedItems(id, data);
   }
 }

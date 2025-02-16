@@ -3,9 +3,8 @@ export class ItemsDto {
   code: string;
   description: string;
   category: string | null;
-  companyId: number | null;
   create_id: string;
-  weight: number;
+  weight: number | null;
   isBlocked: boolean;
   created_at: Date | null;
   updated_at: Date | null;
@@ -15,5 +14,6 @@ export class ItemsDto {
     last_name: string;
     email: string;
     username: string;
+    role: string;
   };
 }

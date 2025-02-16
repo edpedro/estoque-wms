@@ -1,83 +1,102 @@
+import { BlockedItemsUseCase } from './../usecases/blocked-items.usecase';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCompanyUseCase } from '../usecases/create-items.usecase';
-import { ListCompanyUseCase } from '../usecases/list-items.usecase';
-import { ListCompanyIdUseCase } from '../usecases/list-items-id.usecase';
-import { UpdateCompanyUseCase } from '../usecases/update-items.usecase';
-import { DeleteCompanyUseCase } from '../usecases/delete-items.usecase';
-import { CreateCompanyDto } from '../dto/create-items.dto';
-import { UpdateCompanyDto } from '../dto/update-items.dto';
-import { ListCompanyCNPJUseCase } from '../usecases/list-items-cnpj.usecase';
-import { cnpj } from 'cpf-cnpj-validator';
+import { CreateItemsUseCase } from '../usecases/create-items.usecase';
+import { ListItemsUseCase } from '../usecases/list-items.usecase';
+import { ListItemsIdUseCase } from '../usecases/list-items-id.usecase';
+import { UpdateItemsUseCase } from '../usecases/update-items.usecase';
+import { DeleteItemsUseCase } from '../usecases/delete-items.usecase';
+import { CreateItemDto } from '../dto/create-items.dto';
+import { UpdateItemsDto } from '../dto/update-items.dto';
+import { ListItemsCodeUseCase } from '../usecases/list-items-code.usecase';
 
 @Injectable()
-export class CompanyService {
+export class ItemsService {
   constructor(
-    private readonly createCompanyUseCase: CreateCompanyUseCase,
-    private readonly listCompanyUseCase: ListCompanyUseCase,
-    private readonly listCompanyIdUseCase: ListCompanyIdUseCase,
-    private readonly updateCompanyUseCase: UpdateCompanyUseCase,
-    private readonly deleteCompanyUseCase: DeleteCompanyUseCase,
-    private readonly listCompanyCNPJUseCase: ListCompanyCNPJUseCase,
+    private readonly createItemsUseCase: CreateItemsUseCase,
+    private readonly listItemsUseCase: ListItemsUseCase,
+    private readonly listItemsIdUseCase: ListItemsIdUseCase,
+    private readonly updateItemsUseCase: UpdateItemsUseCase,
+    private readonly deleteItemsUseCase: DeleteItemsUseCase,
+    private readonly listItemsCodeUseCase: ListItemsCodeUseCase,
+    private readonly blockedItemsUseCase: BlockedItemsUseCase,
   ) {}
 
-  async create(createCompanyDto: CreateCompanyDto) {
-    if (!cnpj.isValid(createCompanyDto.cnpj)) {
-      throw new Error('CNPJ inválido');
-    }
-
-    const companyExist = await this.listCompanyCNPJUseCase.execute(
-      createCompanyDto.cnpj,
+  async create(createItemDto: CreateItemDto) {
+    const itemExist = await this.listItemsCodeUseCase.execute(
+      createItemDto.code,
     );
-    if (companyExist) {
-      throw new HttpException('CNPJ já cadastrado', HttpStatus.NOT_FOUND);
+    if (itemExist) {
+      throw new HttpException('Código já cadastrado', HttpStatus.NOT_FOUND);
     }
 
-    const company = await this.createCompanyUseCase.execute(createCompanyDto);
-
-    return company;
-  }
-
-  async findAll() {
-    return await this.listCompanyUseCase.execute();
-  }
-
-  async findOne(id: number) {
-    const company = await this.listCompanyIdUseCase.execute(id);
-    if (!company) {
-      throw new HttpException('Empresa não encontrada', HttpStatus.NOT_FOUND);
-    }
-    return company;
-  }
-
-  async update(id: number, data: UpdateCompanyDto) {
-    const companyExist = await this.listCompanyIdUseCase.execute(id);
-    if (!companyExist) {
-      throw new HttpException('Empresa não encontrada', HttpStatus.NOT_FOUND);
+    if (createItemDto.weight) {
+      if (Math.sign(createItemDto.weight) < 0) {
+        throw new HttpException(
+          'Peso não pode ser negativo',
+          HttpStatus.NOT_FOUND,
+        );
+      }
     }
 
     try {
-      const updatedCompany = await this.updateCompanyUseCase.execute(id, data);
-      return updatedCompany;
+      const items = await this.createItemsUseCase.execute(createItemDto);
+
+      return items;
     } catch (error) {
-      console.error(error);
-      throw new HttpException('Empresa não atualizada', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Código não cadastrado', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  async findAll() {
+    return await this.listItemsUseCase.execute();
+  }
+
+  async findOne(id: number) {
+    const items = await this.listItemsIdUseCase.execute(id);
+    if (!items) {
+      throw new HttpException('Código não encontrada', HttpStatus.NOT_FOUND);
+    }
+    return items;
+  }
+
+  async update(id: number, data: UpdateItemsDto) {
+    const itemExist = await this.listItemsIdUseCase.execute(id);
+    if (!itemExist) {
+      throw new HttpException('Código não encontrada', HttpStatus.NOT_FOUND);
+    }
+
+    try {
+      const updatedItem = await this.updateItemsUseCase.execute(id, data);
+      return updatedItem;
+    } catch (error) {
+      throw new HttpException('Codigo não atualizada', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async blocked(id: number, data: UpdateItemsDto) {
+    const itemExist = await this.listItemsIdUseCase.execute(id);
+    if (!itemExist) {
+      throw new HttpException('Código não encontrada', HttpStatus.NOT_FOUND);
+    }
+
+    try {
+      const updatedItem = await this.blockedItemsUseCase.execute(id, data);
+      return updatedItem;
+    } catch (error) {
+      throw new HttpException('Codigo não bloqueado', HttpStatus.BAD_REQUEST);
     }
   }
 
   async remove(id: number) {
-    const companyExist = await this.listCompanyIdUseCase.execute(id);
-    if (!companyExist) {
-      throw new HttpException('Empresa não encontrada', HttpStatus.NOT_FOUND);
+    const itemExist = await this.listItemsIdUseCase.execute(id);
+    if (!itemExist) {
+      throw new HttpException('Codigo não encontrada', HttpStatus.NOT_FOUND);
     }
 
     try {
-      await this.deleteCompanyUseCase.execute(id);
+      await this.deleteItemsUseCase.execute(id);
     } catch (error) {
-      console.error(error);
-      throw new HttpException(
-        'Erro ao deletar Empresa',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Erro ao deletar Codigo', HttpStatus.BAD_REQUEST);
     }
   }
 }

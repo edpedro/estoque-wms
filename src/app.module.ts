@@ -6,9 +6,16 @@ import { AuthModule } from './auth/auth.module';
 import { CampanyModule } from './company/campany.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
+import { ItemsModule } from './items/items.module';
 
 @Module({
-  imports: [UsersModule, PermissionsModule, AuthModule, CampanyModule],
+  imports: [
+    UsersModule,
+    PermissionsModule,
+    AuthModule,
+    CampanyModule,
+    ItemsModule,
+  ],
   providers: [
     PrismaService,
     {

@@ -1,12 +1,12 @@
-import { CompanyDto } from '../dto/items.dto';
-import { CompanyRepository } from '../repositories/items.repository';
+import { ItemsDto } from '../dto/items.dto';
+import { ItemsRepository } from '../repositories/items.repository';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ListCompanyUseCase {
-  constructor(private readonly companyRepository: CompanyRepository) {}
+export class ListItemsUseCase {
+  constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  async execute(): Promise<CompanyDto[]> {
-    return this.companyRepository.findAllCompnay();
+  async execute(): Promise<ItemsDto[]> {
+    return this.itemsRepository.findAllItems();
   }
 }

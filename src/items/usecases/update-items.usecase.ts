@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CompanyRepository } from '../repositories/items.repository';
-import { UpdateCompanyDto } from '../dto/update-items.dto';
+import { ItemsRepository } from '../repositories/items.repository';
+import { UpdateItemsDto } from '../dto/update-items.dto';
 
 @Injectable()
-export class UpdateCompanyUseCase {
-  constructor(private readonly companyRepository: CompanyRepository) {}
+export class UpdateItemsUseCase {
+  constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  async execute(id: number, data: UpdateCompanyDto) {
-    return this.companyRepository.updateCompany(id, data);
+  async execute(id: number, data: UpdateItemsDto) {
+    return this.itemsRepository.updateItems(id, data);
   }
 }

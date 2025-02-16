@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { CompanyRepository } from '../repositories/items.repository';
+import { ItemsRepository } from '../repositories/items.repository';
 
 @Injectable()
-export class DeleteCompanyUseCase {
-  constructor(private readonly companyRepository: CompanyRepository) {}
+export class DeleteItemsUseCase {
+  constructor(private readonly itemsRepository: ItemsRepository) {}
 
   async execute(id: number) {
-    return this.companyRepository.removeCompany(id);
+    return this.itemsRepository.removeItems(id);
   }
 }

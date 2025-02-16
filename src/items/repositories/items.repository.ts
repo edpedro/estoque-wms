@@ -10,7 +10,7 @@ export class ItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async createItems(data: CreateItemDto) {
-    return await this.prisma.item.create({
+    const result = await this.prisma.items.create({
       data,
       select: {
         id: true,
@@ -19,10 +19,17 @@ export class ItemsRepository {
         category: true,
         weight: true,
         isBlocked: true,
-        companyId: true,
         create_id: true,
         created_at: true,
         updated_at: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            cnpj: true,
+            isBlocked: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -30,14 +37,22 @@ export class ItemsRepository {
             last_name: true,
             email: true,
             username: true,
+            role: true,
           },
         },
       },
     });
+
+    const item: ItemsDto = {
+      ...result,
+      weight: result.weight ? result.weight.toNumber() : null,
+    };
+
+    return item;
   }
 
-  async findById(id: number) {
-    return await this.prisma.item.findUnique({
+  async findById(id: number): Promise<ItemsDto | null> {
+    const result = await this.prisma.items.findUnique({
       where: { id },
       select: {
         id: true,
@@ -46,10 +61,17 @@ export class ItemsRepository {
         category: true,
         weight: true,
         isBlocked: true,
-        companyId: true,
         create_id: true,
         created_at: true,
         updated_at: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            cnpj: true,
+            isBlocked: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -57,14 +79,26 @@ export class ItemsRepository {
             last_name: true,
             email: true,
             username: true,
+            role: true,
           },
         },
       },
     });
+
+    if (!result) {
+      return null;
+    }
+
+    const item: ItemsDto = {
+      ...result,
+      weight: result.weight ? result.weight.toNumber() : null,
+    };
+
+    return item;
   }
 
   async findByCODE(code: string) {
-    return await this.prisma.item.findUnique({
+    const result = await this.prisma.items.findUnique({
       where: { code },
       select: {
         id: true,
@@ -73,10 +107,17 @@ export class ItemsRepository {
         category: true,
         weight: true,
         isBlocked: true,
-        companyId: true,
         create_id: true,
         created_at: true,
         updated_at: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            cnpj: true,
+            isBlocked: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -84,14 +125,26 @@ export class ItemsRepository {
             last_name: true,
             email: true,
             username: true,
+            role: true,
           },
         },
       },
     });
+
+    if (!result) {
+      return null;
+    }
+
+    const item: ItemsDto = {
+      ...result,
+      weight: result.weight ? result.weight.toNumber() : null,
+    };
+
+    return item;
   }
 
   async findAllItems(): Promise<ItemsDto[]> {
-    return await this.prisma.item.findMany({
+    const result = await this.prisma.items.findMany({
       select: {
         id: true,
         code: true,
@@ -99,10 +152,17 @@ export class ItemsRepository {
         category: true,
         weight: true,
         isBlocked: true,
-        companyId: true,
         create_id: true,
         created_at: true,
         updated_at: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            cnpj: true,
+            isBlocked: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -110,14 +170,22 @@ export class ItemsRepository {
             last_name: true,
             email: true,
             username: true,
+            role: true,
           },
         },
       },
     });
+
+    const items: ItemsDto[] = result.map((item) => ({
+      ...item,
+      weight: item.weight ? item.weight.toNumber() : null,
+    }));
+
+    return items;
   }
 
-  async updateCompany(id: number, data: UpdateItemsDto) {
-    return await this.prisma.item.update({
+  async updateItems(id: number, data: UpdateItemsDto) {
+    return await this.prisma.items.update({
       where: { id },
       data,
       select: {
@@ -127,10 +195,17 @@ export class ItemsRepository {
         category: true,
         weight: true,
         isBlocked: true,
-        companyId: true,
         create_id: true,
         created_at: true,
         updated_at: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            cnpj: true,
+            isBlocked: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -138,15 +213,54 @@ export class ItemsRepository {
             last_name: true,
             email: true,
             username: true,
+            role: true,
           },
         },
       },
     });
   }
 
-  async removeCompany(id: number) {
-    return await this.prisma.item.delete({
+  async removeItems(id: number) {
+    return await this.prisma.items.delete({
       where: { id },
+    });
+  }
+
+  async blockedItems(id: number, data: UpdateItemsDto) {
+    return await this.prisma.items.update({
+      where: { id },
+      data: {
+        isBlocked: data.isBlocked,
+      },
+      select: {
+        id: true,
+        code: true,
+        description: true,
+        category: true,
+        weight: true,
+        isBlocked: true,
+        create_id: true,
+        created_at: true,
+        updated_at: true,
+        company: {
+          select: {
+            id: true,
+            name: true,
+            cnpj: true,
+            isBlocked: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            email: true,
+            username: true,
+            role: true,
+          },
+        },
+      },
     });
   }
 }

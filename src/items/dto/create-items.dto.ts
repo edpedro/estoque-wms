@@ -33,5 +33,5 @@ export class CreateItemDto {
 
   @IsBoolean()
   @IsOptional()
-  readonly is_blocked?: boolean;
+  readonly isBlocked?: boolean;
 }
