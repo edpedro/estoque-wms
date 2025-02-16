@@ -32,9 +32,13 @@ export class CompanyService {
       throw new HttpException('CNPJ já cadastrado', HttpStatus.NOT_FOUND);
     }
 
-    const company = await this.createCompanyUseCase.execute(createCompanyDto);
+    try {
+      const company = await this.createCompanyUseCase.execute(createCompanyDto);
 
-    return company;
+      return company;
+    } catch (error) {
+      throw new HttpException('Empresa não cadastrada', HttpStatus.NOT_FOUND);
+    }
   }
 
   async findAll() {
