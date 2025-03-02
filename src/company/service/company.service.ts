@@ -25,7 +25,7 @@ export class CompanyService {
     private readonly blockedCompanyUseCase: BlockedCompanyUseCase,
   ) {}
 
-  async create(createCompanyDto: CreateCompanyDto) {
+  async create(createCompanyDto: CreateCompanyDto, req: ReqUserDto) {
     if (!cnpj.isValid(createCompanyDto.cnpj)) {
       throw new Error('CNPJ inválido');
     }
@@ -38,7 +38,10 @@ export class CompanyService {
     }
 
     try {
-      const company = await this.createCompanyUseCase.execute(createCompanyDto);
+      const company = await this.createCompanyUseCase.execute(
+        createCompanyDto,
+        req.user.id,
+      );
 
       return company;
     } catch (error) {

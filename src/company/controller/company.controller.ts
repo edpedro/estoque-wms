@@ -23,8 +23,8 @@ export class CampanyController {
 
   @Post()
   @Roles('company_create')
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  create(@Body() createCompanyDto: CreateCompanyDto, @Req() req: ReqUserDto) {
+    return this.companyService.create(createCompanyDto, req);
   }
 
   @Get()

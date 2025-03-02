@@ -7,7 +7,7 @@ import { CompanyDto } from '../dto/company.dto';
 export class CreateCompanyUseCase {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
-  async execute(data: CreateCompanyDto): Promise<CompanyDto> {
-    return this.companyRepository.createCompany(data);
+  async execute(data: CreateCompanyDto, userId: string): Promise<CompanyDto> {
+    return this.companyRepository.createCompany(data, userId);
   }
 }

@@ -9,9 +9,12 @@ import { CompanyDto } from '../dto/company.dto';
 export class CompanyRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createCompany(data: CreateCompanyDto) {
+  async createCompany(data: CreateCompanyDto, userId: string) {
     return await this.prisma.company.create({
-      data,
+      data: {
+        ...data,
+        create_id: userId,
+      },
       select: {
         id: true,
         name: true,
