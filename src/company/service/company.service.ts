@@ -26,6 +26,13 @@ export class CompanyService {
   ) {}
 
   async create(createCompanyDto: CreateCompanyDto, req: ReqUserDto) {
+    if (req.user.role !== 'admin') {
+      throw new HttpException(
+        'Usuario não pode cadastrar empresa',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
     if (!cnpj.isValid(createCompanyDto.cnpj)) {
       throw new Error('CNPJ inválido');
     }
