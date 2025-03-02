@@ -21,7 +21,7 @@ export class CreateItemDto {
 
   @IsString()
   @IsOptional()
-  readonly company_id?: string;
+  readonly company_id?: number;
 
   @IsNumber()
   @IsOptional()

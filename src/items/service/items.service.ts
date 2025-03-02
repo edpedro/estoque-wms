@@ -9,6 +9,7 @@ import { CreateItemDto } from '../dto/create-items.dto';
 import { UpdateItemsDto } from '../dto/update-items.dto';
 import { ListItemsCodeUseCase } from '../usecases/list-items-code.usecase';
 import { ReqUserDto } from 'src/auth/dto/req-user.dto';
+import { ListCompanyIdUseCase } from 'src/company/usecases/list-company-id.usecase';
 
 @Injectable()
 export class ItemsService {
@@ -20,13 +21,28 @@ export class ItemsService {
     private readonly deleteItemsUseCase: DeleteItemsUseCase,
     private readonly listItemsCodeUseCase: ListItemsCodeUseCase,
     private readonly blockedItemsUseCase: BlockedItemsUseCase,
+    private readonly listCompanyIdUseCase: ListCompanyIdUseCase,
   ) {}
 
   async create(createItemDto: CreateItemDto, req: ReqUserDto) {
-    const itemExist = await this.listItemsCodeUseCase.execute(
+    if (createItemDto.company_id) {
+      const companyExits = await this.listCompanyIdUseCase.execute(
+        createItemDto.company_id,
+      );
+
+      if (!companyExits) {
+        throw new HttpException('Empresa não cadastrada', HttpStatus.NOT_FOUND);
+      }
+
+      if (companyExits?.isBlocked) {
+        throw new HttpException('Empresa inativa', HttpStatus.NOT_FOUND);
+      }
+    }
+
+    const itemExits = await this.listItemsCodeUseCase.execute(
       createItemDto.code,
     );
-    if (itemExist) {
+    if (itemExits) {
       throw new HttpException('Código já cadastrado', HttpStatus.NOT_FOUND);
     }
 
