@@ -7,14 +7,33 @@ import { CampanyModule } from './company/campany.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { ItemsModule } from './items/items.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<RedisModuleOptions> => ({
+        type: 'single',
+        options: {
+          host: configService.get<string>('REDIS_HOST', 'localhost'),
+          port: configService.get<number>('REDIS_PORT', 6379),
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+      }),
+    }),
     UsersModule,
     PermissionsModule,
     AuthModule,
     CampanyModule,
     ItemsModule,
+    CacheModule,
   ],
   providers: [
     PrismaService,
@@ -23,5 +42,6 @@ import { ItemsModule } from './items/items.module';
       useClass: RolesGuard,
     },
   ],
+  exports: [],
 })
 export class AppModule {}

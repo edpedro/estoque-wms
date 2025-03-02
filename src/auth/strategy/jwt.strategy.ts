@@ -12,13 +12,14 @@ export class JwtStarty extends PassportStrategy(Strategy) {
 
   async validate(paload: any) {
     return {
-      id: paload.sub,
-      username: paload.username,
-      name: paload.name,
-      role: paload.role,
+      id: paload.id,
       first_name: paload.first_name,
+      last_name: paload.last_name,
+      username: paload.username,
+      role: paload.role,
       email: paload.email,
       isBlocked: paload.isBlocked,
+      active: paload.active,
     };
   }
 }

@@ -9,6 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRepository } from 'src/users/repositories/user.repository';
 import { ListUserUserNameUseCase } from 'src/users/usecases/list-user-username.usercase';
 import { LocalStrategy } from './strategy/local.strategy';
+import { ListUserIdUseCase } from 'src/users/usecases/list-user-id.usecase';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { LocalStrategy } from './strategy/local.strategy';
     PrismaService,
     UserRepository,
     ListUserUserNameUseCase,
+    ListUserIdUseCase,
   ],
-  exports: [JwtModule],
+  exports: [JwtModule, ListUserIdUseCase],
 })
 export class AuthModule {}

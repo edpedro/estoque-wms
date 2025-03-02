@@ -10,6 +10,7 @@ import { ListUserUseCase } from './usecases/list-user.usecase';
 import { DeleteUserUseCase } from './usecases/delete-user.usecase';
 import { UpdateUserUseCase } from './usecases/update-user.usecase';
 import { ListUserIdUseCase } from './usecases/list-user-id.usecase';
+import { CacheService } from 'src/cache/cache.service';
 
 @Module({
   controllers: [UsersController],
@@ -24,6 +25,7 @@ import { ListUserIdUseCase } from './usecases/list-user-id.usecase';
     DeleteUserUseCase,
     UpdateUserUseCase,
     ListUserIdUseCase,
+    CacheService,
   ],
 })
 export class UsersModule {}

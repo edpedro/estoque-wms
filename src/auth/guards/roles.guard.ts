@@ -1,3 +1,4 @@
+import { CacheService } from './../../cache/cache.service';
 import {
   Injectable,
   CanActivate,
@@ -8,12 +9,16 @@ import {
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from '../decorators/roles.decorator';
 import { JwtService } from '@nestjs/jwt';
+import { UserAuthDto } from '../dto/UserAuthDto';
+import { ListUserIdUseCase } from 'src/users/usecases/list-user-id.usecase';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private readonly jwtService: JwtService,
+    private readonly cacheService: CacheService,
+    private readonly listUserIdUseCase: ListUserIdUseCase,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -34,18 +39,35 @@ export class RolesGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload: UserAuthDto = await this.jwtService.verifyAsync(token, {
         secret: process.env.SECRET_KEY,
       });
 
       if (!payload) {
-        throw new UnauthorizedException('Dados invalidos');
+        throw new UnauthorizedException('Dados inválidos');
       }
 
-      const hasPermissions = requiredRoles.every((requiredPermission) =>
-        payload.permission.some(
-          (userPermission) => userPermission.name === requiredPermission,
-        ),
+      if (payload.isBlocked === true || payload.active === false) {
+        throw new UnauthorizedException('Usuário bloqueado.');
+      }
+
+      if (payload?.role === 'admin') {
+        return true;
+      }
+
+      let userResult = await this.cacheService.getCache(payload.id);
+
+      if (!userResult) {
+        const result = await this.listUserIdUseCase.execute(payload.id);
+        await this.cacheService.setCache(payload.id, result);
+        userResult = result;
+      }
+
+      const hasPermissions = requiredRoles.every(
+        (requiredPermission) =>
+          userResult.permissions?.some(
+            (userPermission) => userPermission.name === requiredPermission,
+          ) ?? false,
       );
 
       if (!hasPermissions) {
@@ -56,9 +78,25 @@ export class RolesGuard implements CanActivate {
 
       return true;
     } catch (error) {
-      throw new ForbiddenException(
-        'Você não tem permissão para acessar este recurso.',
-      );
+      if (error.name === 'JsonWebTokenError') {
+        throw new UnauthorizedException(
+          'Token inválido ou assinatura incorreta',
+        );
+      }
+
+      if (error.name === 'TokenExpiredError') {
+        throw new UnauthorizedException('Token expirado');
+      }
+
+      if (
+        error instanceof UnauthorizedException ||
+        error instanceof ForbiddenException
+      ) {
+        throw error;
+      }
+
+      console.error('Erro desconhecido na autenticação:', error);
+      throw new UnauthorizedException('Acesso inválido');
     }
   }
 }

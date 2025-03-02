@@ -1,3 +1,4 @@
+import { CacheService } from './../../cache/cache.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCompanyUseCase } from '../usecases/create-company.usecase';
 import { ListCompanyUseCase } from '../usecases/list-company.usecase';
@@ -9,6 +10,8 @@ import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { ListCompanyCNPJUseCase } from '../usecases/list-company-cnpj.usecase';
 import { cnpj } from 'cpf-cnpj-validator';
 import { BlockedCompanyUseCase } from '../usecases/blocked-company.usecase';
+import { UserDto } from 'src/users/dto/user.dto';
+import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Injectable()
 export class CompanyService {
@@ -70,7 +73,7 @@ export class CompanyService {
     }
   }
 
-  async blocked(id: number, data: UpdateCompanyDto) {
+  async blocked(id: number, data: UpdateCompanyDto, req: ReqUserDto) {
     const companyExist = await this.listCompanyIdUseCase.execute(id);
     if (!companyExist) {
       throw new HttpException('Empresa não encontrada', HttpStatus.NOT_FOUND);
@@ -78,6 +81,7 @@ export class CompanyService {
 
     try {
       const blockedCompany = await this.blockedCompanyUseCase.execute(id, data);
+
       return blockedCompany;
     } catch (error) {
       console.error(error);

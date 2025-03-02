@@ -9,6 +9,7 @@ import { EncryptedPassword } from 'src/users/utils/users/encrypted-password';
 import { UpdateUserUseCase } from '../usecases/update-user.usecase';
 import { DeleteUserUseCase } from '../usecases/delete-user.usecase';
 import { ListUserIdUseCase } from '../usecases/list-user-id.usecase';
+import { CacheService } from 'src/cache/cache.service';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +21,7 @@ export class UsersService {
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly listUserIdUseCase: ListUserIdUseCase,
+    private readonly cacheService: CacheService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -131,6 +133,8 @@ export class UsersService {
         const hashedPassword = await EncryptedPassword(data.password);
         dataToUpdate.password = hashedPassword;
       }
+
+      await this.cacheService.removeCache(id);
 
       const user = await this.updateUserUseCase.execute(id, dataToUpdate);
 

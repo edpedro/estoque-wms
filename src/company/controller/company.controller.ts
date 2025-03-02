@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CompanyService } from '../service/company.service';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Controller('company')
 @UseGuards(AuthGuard('jwt'))
@@ -45,8 +47,12 @@ export class CampanyController {
 
   @Patch('blocked/:id')
   @Roles('company_blocked')
-  blocked(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companyService.blocked(+id, updateCompanyDto);
+  blocked(
+    @Param('id') id: string,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+    @Req() req: ReqUserDto,
+  ) {
+    return this.companyService.blocked(+id, updateCompanyDto, req);
   }
 
   @Delete(':id')
