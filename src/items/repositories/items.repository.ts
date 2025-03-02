@@ -9,9 +9,12 @@ import { ItemsDto } from '../dto/items.dto';
 export class ItemsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createItems(data: CreateItemDto) {
+  async createItems(data: CreateItemDto, idUser: string) {
     const result = await this.prisma.items.create({
-      data,
+      data: {
+        ...data,
+        create_id: idUser,
+      },
       select: {
         id: true,
         code: true,

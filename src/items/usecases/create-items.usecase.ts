@@ -7,7 +7,7 @@ import { ItemsDto } from '../dto/items.dto';
 export class CreateItemsUseCase {
   constructor(private readonly itemsRepository: ItemsRepository) {}
 
-  async execute(data: CreateItemDto): Promise<ItemsDto> {
-    return this.itemsRepository.createItems(data);
+  async execute(data: CreateItemDto, idUser: string): Promise<ItemsDto> {
+    return this.itemsRepository.createItems(data, idUser);
   }
 }

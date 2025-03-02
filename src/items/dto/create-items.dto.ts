@@ -23,10 +23,6 @@ export class CreateItemDto {
   @IsOptional()
   readonly company_id?: string;
 
-  @IsString()
-  @IsNotEmpty({ message: "O campo 'userId' não pode estar vazio." })
-  readonly create_id: string;
-
   @IsNumber()
   @IsOptional()
   readonly weight?: number;

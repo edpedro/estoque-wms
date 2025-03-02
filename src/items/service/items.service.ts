@@ -8,6 +8,7 @@ import { DeleteItemsUseCase } from '../usecases/delete-items.usecase';
 import { CreateItemDto } from '../dto/create-items.dto';
 import { UpdateItemsDto } from '../dto/update-items.dto';
 import { ListItemsCodeUseCase } from '../usecases/list-items-code.usecase';
+import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Injectable()
 export class ItemsService {
@@ -21,7 +22,7 @@ export class ItemsService {
     private readonly blockedItemsUseCase: BlockedItemsUseCase,
   ) {}
 
-  async create(createItemDto: CreateItemDto) {
+  async create(createItemDto: CreateItemDto, req: ReqUserDto) {
     const itemExist = await this.listItemsCodeUseCase.execute(
       createItemDto.code,
     );
@@ -39,7 +40,10 @@ export class ItemsService {
     }
 
     try {
-      const items = await this.createItemsUseCase.execute(createItemDto);
+      const items = await this.createItemsUseCase.execute(
+        createItemDto,
+        req.user.id,
+      );
 
       return items;
     } catch (error) {

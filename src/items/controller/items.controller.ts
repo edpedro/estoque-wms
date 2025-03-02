@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ItemsService } from '../service/items.service';
@@ -13,6 +14,7 @@ import { CreateItemDto } from '../dto/create-items.dto';
 import { UpdateItemsDto } from '../dto/update-items.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 
 @Controller('items')
 @UseGuards(AuthGuard('jwt'))
@@ -21,8 +23,8 @@ export class ItemsController {
 
   @Post()
   @Roles('items_create')
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemsService.create(createItemDto);
+  create(@Body() createItemDto: CreateItemDto, @Req() req: ReqUserDto) {
+    return this.itemsService.create(createItemDto, req);
   }
 
   @Get()
