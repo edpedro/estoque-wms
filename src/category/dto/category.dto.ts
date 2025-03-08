@@ -1,12 +1,15 @@
-export class ItemsDto {
+export class CategoryDto {
   id: number;
-  code: string;
-  description: string;
+  name: string;
   create_id: string;
-  weight: number | null;
-  isBlocked: boolean;
   created_at: Date | null;
   updated_at: Date | null;
+  company: {
+    id: number;
+    name: string;
+    cnpj: string;
+    isBlocked: boolean;
+  };
   user: {
     id: string;
     first_name: string;

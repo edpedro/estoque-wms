@@ -10,6 +10,7 @@ import { ItemsModule } from './items/items.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { CacheModule } from './cache/cache.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { CacheModule } from './cache/cache.module';
     CampanyModule,
     ItemsModule,
     CacheModule,
+    CategoryModule,
   ],
   providers: [
     PrismaService,

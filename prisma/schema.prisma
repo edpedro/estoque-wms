@@ -34,6 +34,7 @@ model User {
   company Company[]
   companyUser UserCompany[]
   items Items[]
+  category Category[]
   
   @@map("users")
 }
@@ -79,6 +80,7 @@ model Company {
 
   users UserCompany[]
   items Items[]
+  category Category[]
 
   @@map("company")
 }
@@ -99,7 +101,6 @@ model Items {
   id          Int      @id @default(autoincrement())
   code        String   @unique
   description String
-  category    String?
   companyId   Int?
   createdBy   String?   
   weight      Decimal?
@@ -110,8 +111,40 @@ model Items {
   company     Company? @relation(fields: [companyId], references: [id])
   user User @relation(fields: [create_id], references: [id])
   create_id String
+
+  categoryItems CategoryItem[]
  
 
   @@index([code])
   @@map("items")
+}
+
+model Category {
+  id         Int      @id @default(autoincrement())
+  companyId Int
+  name       String   @db.VarChar(100)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+ 
+  user User @relation(fields: [create_id], references: [id])
+  create_id String
+
+  company    Company @relation(fields: [companyId], references: [id])
+
+  categoryItems CategoryItem[]
+  
+  @@index([name])
+  @@map("category")
+  
+}
+
+model CategoryItem {
+  categoryId Int
+  itemId     Int 
+
+  category Category @relation(fields: [categoryId], references: [id])
+  item     Items     @relation(fields: [itemId], references: [id])
+
+  @@id([categoryId, itemId])
+  @@map("category_item")
 }
