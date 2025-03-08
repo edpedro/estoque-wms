@@ -1,4 +1,3 @@
-import { cnpj } from 'cpf-cnpj-validator';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateItemDto } from '../dto/create-items.dto';
@@ -12,8 +11,19 @@ export class ItemsRepository {
   async createItems(data: CreateItemDto, idUser: string) {
     const result = await this.prisma.items.create({
       data: {
-        ...data,
+        code: data.code,
+        description: data.description,
+        weight: data.weight,
         create_id: idUser,
+        companyId: data.companyId,
+
+        categoryItems: {
+          create: {
+            category: {
+              connect: { id: data.categoryId },
+            },
+          },
+        },
       },
       select: {
         id: true,
@@ -21,9 +31,18 @@ export class ItemsRepository {
         description: true,
         weight: true,
         isBlocked: true,
-        create_id: true,
         created_at: true,
         updated_at: true,
+        categoryItems: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         company: {
           select: {
             id: true,
@@ -65,6 +84,17 @@ export class ItemsRepository {
         create_id: true,
         created_at: true,
         updated_at: true,
+        categoryItems: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+
         company: {
           select: {
             id: true,
@@ -110,6 +140,16 @@ export class ItemsRepository {
         create_id: true,
         created_at: true,
         updated_at: true,
+        categoryItems: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         company: {
           select: {
             id: true,
@@ -154,6 +194,16 @@ export class ItemsRepository {
         create_id: true,
         created_at: true,
         updated_at: true,
+        categoryItems: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         company: {
           select: {
             id: true,
@@ -196,6 +246,16 @@ export class ItemsRepository {
         create_id: true,
         created_at: true,
         updated_at: true,
+        categoryItems: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         company: {
           select: {
             id: true,
@@ -239,6 +299,16 @@ export class ItemsRepository {
         create_id: true,
         created_at: true,
         updated_at: true,
+        categoryItems: {
+          select: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         company: {
           select: {
             id: true,

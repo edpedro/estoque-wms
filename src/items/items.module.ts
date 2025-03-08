@@ -12,6 +12,8 @@ import { ListItemsCodeUseCase } from './usecases/list-items-code.usecase';
 import { BlockedItemsUseCase } from './usecases/blocked-items.usecase';
 import { ListCompanyIdUseCase } from 'src/company/usecases/list-company-id.usecase';
 import { CompanyRepository } from 'src/company/repositories/company.repository';
+import { ListCategoryIdUseCase } from 'src/category/usecase/list-category-id.usecase';
+import { CategoryRepository } from 'src/category/repositories/category.repository';
 
 @Module({
   controllers: [ItemsController],
@@ -20,6 +22,7 @@ import { CompanyRepository } from 'src/company/repositories/company.repository';
     PrismaService,
     ItemsRepository,
     CompanyRepository,
+    CategoryRepository,
     CreateItemsUseCase,
     DeleteItemsUseCase,
     ListItemsIdUseCase,
@@ -28,6 +31,7 @@ import { CompanyRepository } from 'src/company/repositories/company.repository';
     ListItemsCodeUseCase,
     BlockedItemsUseCase,
     ListCompanyIdUseCase,
+    ListCategoryIdUseCase,
   ],
 })
 export class ItemsModule {}

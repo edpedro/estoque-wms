@@ -15,13 +15,13 @@ export class CreateItemDto {
   @IsNotEmpty({ message: "O campo 'descrição' não pode estar vazio." })
   readonly description: string;
 
-  @IsString()
-  @IsOptional()
-  readonly category?: string;
+  @IsNumber({}, { message: "O campo 'categoryId' deve ser um número válido." })
+  @IsNotEmpty({ message: "O campo 'categoryId' não pode estar vazio." })
+  readonly categoryId: number;
 
-  @IsString()
-  @IsOptional()
-  readonly company_id?: number;
+  @IsNumber({}, { message: "O campo 'companyId' deve ser um número válido." })
+  @IsNotEmpty({ message: "O campo 'companyId' não pode estar vazio." })
+  readonly companyId: number;
 
   @IsNumber()
   @IsOptional()

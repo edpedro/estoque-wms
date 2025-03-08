@@ -2,7 +2,6 @@ export class ItemsDto {
   id: number;
   code: string;
   description: string;
-  create_id: string;
   weight: number | null;
   isBlocked: boolean;
   created_at: Date | null;

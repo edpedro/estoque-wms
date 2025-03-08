@@ -10,6 +10,7 @@ import { UpdateItemsDto } from '../dto/update-items.dto';
 import { ListItemsCodeUseCase } from '../usecases/list-items-code.usecase';
 import { ReqUserDto } from 'src/auth/dto/req-user.dto';
 import { ListCompanyIdUseCase } from 'src/company/usecases/list-company-id.usecase';
+import { ListCategoryIdUseCase } from 'src/category/usecase/list-category-id.usecase';
 
 @Injectable()
 export class ItemsService {
@@ -22,12 +23,13 @@ export class ItemsService {
     private readonly listItemsCodeUseCase: ListItemsCodeUseCase,
     private readonly blockedItemsUseCase: BlockedItemsUseCase,
     private readonly listCompanyIdUseCase: ListCompanyIdUseCase,
+    private readonly listCategoryIdUseCase: ListCategoryIdUseCase,
   ) {}
 
   async create(createItemDto: CreateItemDto, req: ReqUserDto) {
-    if (createItemDto.company_id) {
+    if (createItemDto.companyId) {
       const companyExits = await this.listCompanyIdUseCase.execute(
-        createItemDto.company_id,
+        createItemDto.companyId,
       );
 
       if (!companyExits) {
@@ -36,6 +38,19 @@ export class ItemsService {
 
       if (companyExits?.isBlocked) {
         throw new HttpException('Empresa inativa', HttpStatus.NOT_FOUND);
+      }
+    }
+
+    if (createItemDto.categoryId) {
+      const categoryExits = await this.listCategoryIdUseCase.execute(
+        createItemDto.categoryId,
+      );
+
+      if (!categoryExits) {
+        throw new HttpException(
+          'Categoria não cadastrada',
+          HttpStatus.NOT_FOUND,
+        );
       }
     }
 
@@ -63,6 +78,7 @@ export class ItemsService {
 
       return items;
     } catch (error) {
+      console.log(error);
       throw new HttpException('Código não cadastrado', HttpStatus.NOT_FOUND);
     }
   }
