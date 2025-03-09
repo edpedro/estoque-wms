@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { CacheModule } from './cache/cache.module';
 import { CategoryModule } from './category/category.module';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CategoryModule } from './category/category.module';
     ItemsModule,
     CacheModule,
     CategoryModule,
+    AddressModule,
   ],
   providers: [
     PrismaService,

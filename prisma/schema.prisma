@@ -35,6 +35,7 @@ model User {
   companyUser UserCompany[]
   items Items[]
   category Category[]
+  address Address[]
   
   @@map("users")
 }
@@ -81,6 +82,7 @@ model Company {
   users UserCompany[]
   items Items[]
   category Category[]
+  address Address[]
 
   @@map("company")
 }
@@ -101,19 +103,18 @@ model Items {
   id          Int      @id @default(autoincrement())
   code        String   @unique
   description String
-  companyId   Int?
-  createdBy   String?   
+  companyId   Int?   
   weight      Decimal?
   isBlocked   Boolean  @default(false)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
   company     Company? @relation(fields: [companyId], references: [id])
-  user User @relation(fields: [create_id], references: [id])
-  create_id String
+  user User @relation(fields: [createId], references: [id])
+  createId String
 
   categoryItems CategoryItem[]
- 
+  itemAddress ItemAddress[]
 
   @@index([code])
   @@map("items")
@@ -126,12 +127,13 @@ model Category {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
  
-  user User @relation(fields: [create_id], references: [id])
-  create_id String
+  user User @relation(fields: [createId], references: [id])
+  createId String
 
   company    Company @relation(fields: [companyId], references: [id])
 
   categoryItems CategoryItem[]
+  
   
   @@index([name])
   @@map("category")
@@ -147,4 +149,39 @@ model CategoryItem {
 
   @@id([categoryId, itemId])
   @@map("category_item")
+}
+
+model Address {
+  id         Int      @id @default(autoincrement()) 
+  name       String   @db.VarChar(50)
+  isBlocked  Boolean  @default(false) 
+  status     String    @default("available")
+  capacity   Decimal
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user User @relation(fields: [createId], references: [id])
+  createId String
+
+  company    Company @relation(fields: [companyId], references: [id])
+  companyId Int
+
+  itemAddress ItemAddress[]
+
+
+  @@unique([name])
+  @@index([name])
+  @@map("addresses")
+}
+
+model ItemAddress {
+  itemId    Int
+  addressId Int
+  quantity  Decimal?
+
+  item      Items    @relation(fields: [itemId], references: [id])
+  address   Address  @relation(fields: [addressId], references: [id])
+
+  @@id([itemId, addressId])
+  @@map("item_addresses")
 }
