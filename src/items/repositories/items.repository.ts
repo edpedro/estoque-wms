@@ -14,16 +14,9 @@ export class ItemsRepository {
         code: data.code,
         description: data.description,
         weight: data.weight,
-        create_id: idUser,
+        createId: idUser,
         companyId: data.companyId,
-
-        categoryItems: {
-          create: {
-            category: {
-              connect: { id: data.categoryId },
-            },
-          },
-        },
+        categoryId: data.categoryId,
       },
       select: {
         id: true,
@@ -33,22 +26,19 @@ export class ItemsRepository {
         isBlocked: true,
         created_at: true,
         updated_at: true,
-        categoryItems: {
-          select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
+
         company: {
           select: {
             id: true,
             name: true,
             cnpj: true,
             isBlocked: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         user: {
@@ -81,26 +71,21 @@ export class ItemsRepository {
         description: true,
         weight: true,
         isBlocked: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
-        categoryItems: {
-          select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
-
         company: {
           select: {
             id: true,
             name: true,
             cnpj: true,
             isBlocked: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         user: {
@@ -137,25 +122,21 @@ export class ItemsRepository {
         description: true,
         weight: true,
         isBlocked: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
-        categoryItems: {
-          select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
         company: {
           select: {
             id: true,
             name: true,
             cnpj: true,
             isBlocked: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         user: {
@@ -191,25 +172,21 @@ export class ItemsRepository {
         description: true,
         weight: true,
         isBlocked: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
-        categoryItems: {
-          select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
         company: {
           select: {
             id: true,
             name: true,
             cnpj: true,
             isBlocked: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         user: {
@@ -243,25 +220,21 @@ export class ItemsRepository {
         description: true,
         weight: true,
         isBlocked: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
-        categoryItems: {
-          select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
         company: {
           select: {
             id: true,
             name: true,
             cnpj: true,
             isBlocked: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         user: {
@@ -296,25 +269,21 @@ export class ItemsRepository {
         description: true,
         weight: true,
         isBlocked: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
-        categoryItems: {
-          select: {
-            category: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
         company: {
           select: {
             id: true,
             name: true,
             cnpj: true,
             isBlocked: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
           },
         },
         user: {

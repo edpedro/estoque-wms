@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -36,6 +30,7 @@ model User {
   items Items[]
   category Category[]
   address Address[]
+  stockType StockType[]
   
   @@map("users")
 }
@@ -83,6 +78,7 @@ model Company {
   items Items[]
   category Category[]
   address Address[]
+  stockType StockType[]
 
   @@map("company")
 }
@@ -103,18 +99,18 @@ model Items {
   id          Int      @id @default(autoincrement())
   code        String   @unique
   description String
-  companyId   Int?   
+  companyId   Int
+  categoryId Int  
+  createId String
   weight      Decimal?
   isBlocked   Boolean  @default(false)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
   company     Company? @relation(fields: [companyId], references: [id])
-  user User @relation(fields: [createId], references: [id])
-  createId String
-
-  categoryItems CategoryItem[]
-  itemAddress ItemAddress[]
+  user User @relation(fields: [createId], references: [id])  
+  category     Category? @relation(fields: [categoryId], references: [id])
+  
 
   @@index([code])
   @@map("items")
@@ -123,16 +119,16 @@ model Items {
 model Category {
   id         Int      @id @default(autoincrement())
   companyId Int
+  createId String
   name       String   @db.VarChar(100)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
  
-  user User @relation(fields: [createId], references: [id])
-  createId String
-
+  user User @relation(fields: [createId], references: [id]) 
   company    Company @relation(fields: [companyId], references: [id])
 
-  categoryItems CategoryItem[]
+
+  items Items[]
   
   
   @@index([name])
@@ -140,16 +136,6 @@ model Category {
   
 }
 
-model CategoryItem {
-  categoryId Int
-  itemId     Int 
-
-  category Category @relation(fields: [categoryId], references: [id])
-  item     Items     @relation(fields: [itemId], references: [id])
-
-  @@id([categoryId, itemId])
-  @@map("category_item")
-}
 
 model Address {
   id         Int      @id @default(autoincrement()) 
@@ -166,22 +152,24 @@ model Address {
   company    Company @relation(fields: [companyId], references: [id])
   companyId Int
 
-  itemAddress ItemAddress[]
-
 
   @@unique([name])
   @@index([name])
   @@map("addresses")
 }
 
-model ItemAddress {
-  itemId    Int
-  addressId Int
-  quantity  Decimal?
+model StockType {
+  id        Int      @id @default(autoincrement())
+  name      String
+  companyId Int
+  createId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  item      Items    @relation(fields: [itemId], references: [id])
-  address   Address  @relation(fields: [addressId], references: [id])
+  company   Company  @relation(fields: [companyId], references: [id])
+  user      User     @relation(fields: [createId], references: [id])
 
-  @@id([itemId, addressId])
-  @@map("item_addresses")
+  @@unique([name])
+  @@index([name])
+  @@map("stock_types")
 }

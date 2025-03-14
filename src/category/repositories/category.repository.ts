@@ -12,12 +12,12 @@ export class CategoryRepository {
     return await this.prisma.category.create({
       data: {
         ...data,
-        create_id: idUser,
+        createId: idUser,
       },
       select: {
         id: true,
         name: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
         company: {
@@ -48,7 +48,7 @@ export class CategoryRepository {
       select: {
         id: true,
         name: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
         company: {
@@ -81,7 +81,7 @@ export class CategoryRepository {
       select: {
         id: true,
         name: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
         company: {
@@ -111,7 +111,7 @@ export class CategoryRepository {
       select: {
         id: true,
         name: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
         company: {
@@ -143,7 +143,7 @@ export class CategoryRepository {
       select: {
         id: true,
         name: true,
-        create_id: true,
+        createId: true,
         created_at: true,
         updated_at: true,
         company: {

@@ -1,7 +1,7 @@
 export class CategoryDto {
   id: number;
   name: string;
-  create_id: string;
+  createId: string;
   created_at: Date | null;
   updated_at: Date | null;
   company: {
