@@ -12,6 +12,7 @@ import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { CacheModule } from './cache/cache.module';
 import { CategoryModule } from './category/category.module';
 import { AddressModule } from './address/address.module';
+import { StockTypeModule } from './stock-type/stock-type.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AddressModule } from './address/address.module';
     CacheModule,
     CategoryModule,
     AddressModule,
+    StockTypeModule,
   ],
   providers: [
     PrismaService,
