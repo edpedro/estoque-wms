@@ -1,6 +1,7 @@
 export class AddressDto {
   id: number;
   name: string;
+  isBlocked: boolean;
   created_at: Date | null;
   updated_at: Date | null;
   company: {

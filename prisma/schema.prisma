@@ -30,7 +30,12 @@ model User {
   items Items[]
   category Category[]
   address Address[]
-  stockType StockType[]
+  stockType StockType[]  
+  stock Stock[]
+
+  createdInvoices   Invoice[] @relation(name: "CreatedBy")
+  cancelledInvoices Invoice[] @relation(name: "CancelledBy")
+  updateInvoices Invoice[] @relation(name: "UpdateBy")
   
   @@map("users")
 }
@@ -79,6 +84,8 @@ model Company {
   category Category[]
   address Address[]
   stockType StockType[]
+  invoice Invoice[]
+  stock Stock[]
 
   @@map("company")
 }
@@ -90,6 +97,7 @@ model UserCompany {
 
   company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
 
   @@id([companyId, userId])
   @@map("company_users")
@@ -111,6 +119,7 @@ model Items {
   user User @relation(fields: [createId], references: [id])  
   category     Category? @relation(fields: [categoryId], references: [id])
   
+  Stock     Stock[] 
 
   @@index([code])
   @@map("items")
@@ -151,7 +160,9 @@ model Address {
 
   company    Company @relation(fields: [companyId], references: [id])
   companyId Int
-
+  
+  
+  stock Stock[]
 
   @@unique([name])
   @@index([name])
@@ -169,7 +180,70 @@ model StockType {
   company   Company  @relation(fields: [companyId], references: [id])
   user      User     @relation(fields: [createId], references: [id])
 
+  stock Stock[]
+
   @@unique([name])
   @@index([name])
   @@map("stock_types")
 }
+model Invoice {
+  id            Int            @id @default(autoincrement())
+  number        String         
+  series        String
+  divergence    Boolean  @default(false)
+  issue_date    DateTime
+  entry_date    DateTime
+  totalNf_value Float
+  divergenceReason String?
+  status String?
+  isInvoiceCancelled Boolean  @default(false)
+  cancellationReason String?
+  createId    String
+  userCancelledId String?
+  userUpdateId String?
+  companyId    Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt 
+
+
+  company   Company  @relation(fields: [companyId], references: [id])
+  user            User    @relation(name: "CreatedBy", fields: [createId], references: [id])
+  userCancelled   User?   @relation(name: "CancelledBy", fields: [userCancelledId], references: [id])
+  userUpdate   User?   @relation(name: "UpdateBy", fields: [userUpdateId], references: [id])
+  
+  Stock     Stock[] 
+  
+  @@index([number])
+  @@map("invoices") 
+}
+
+model Stock {
+  id                Int      @id @default(autoincrement())
+  invoiceId        Int
+  itemId           Int
+  stockTypeId      Int?
+  addressId        Int?
+  companyId         Int
+  lastUpdatedBy    String
+  reservedQuantity  Int
+  invoiceQuantity Int
+  divergenceQuantity   Int?
+  currentBalance   Int
+  unitPrice        Decimal  
+  status String?
+  divergenceItem    Boolean  @default(false)
+  assignedAt DateTime @default(now()) @map("assigned_at")
+
+
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  item      Items     @relation(fields: [itemId], references: [id])
+  address   Address?  @relation(fields: [addressId], references: [id])
+  stockType StockType?  @relation(fields: [stockTypeId], references: [id])
+  updatedByUser    User       @relation(fields: [lastUpdatedBy], references: [id]) 
+  company   Company  @relation(fields: [companyId], references: [id])
+
+  @@unique([invoiceId, itemId])
+  @@index([id])
+  @@map("Stock") 
+}
+

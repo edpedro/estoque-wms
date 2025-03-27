@@ -13,6 +13,7 @@ import { CacheModule } from './cache/cache.module';
 import { CategoryModule } from './category/category.module';
 import { AddressModule } from './address/address.module';
 import { StockTypeModule } from './stock-type/stock-type.module';
+import { InvoiceModule } from './invoice/invoice.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { StockTypeModule } from './stock-type/stock-type.module';
     CategoryModule,
     AddressModule,
     StockTypeModule,
+    InvoiceModule,
   ],
   providers: [
     PrismaService,
