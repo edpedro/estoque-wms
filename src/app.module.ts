@@ -14,6 +14,7 @@ import { CategoryModule } from './category/category.module';
 import { AddressModule } from './address/address.module';
 import { StockTypeModule } from './stock-type/stock-type.module';
 import { InvoiceModule } from './invoice/invoice.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { InvoiceModule } from './invoice/invoice.module';
     AddressModule,
     StockTypeModule,
     InvoiceModule,
+    StockModule,
   ],
   providers: [
     PrismaService,

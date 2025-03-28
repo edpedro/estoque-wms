@@ -29,26 +29,31 @@ export class InvoiceController {
   }
 
   @Get()
+  @Roles('invoice_read')
   findAll() {
     return this.invoiceService.findAll();
   }
 
   @Get(':id')
+  @Roles('invoice_read')
   findOne(@Param('id') id: string) {
     return this.invoiceService.findOne(+id);
   }
 
   @Get('/cancelled/all')
+  @Roles('invoice_read_cancelled')
   findAllCancelled() {
     return this.invoiceService.findAllCancelled();
   }
 
   @Get('/cancelled/:id')
+  @Roles('invoice_read_cancelled')
   findOneCancelled(@Param('id') id: string) {
     return this.invoiceService.findOneCancelled(+id);
   }
 
   @Patch(':id')
+  @Roles('invoice_update')
   update(
     @Param('id') id: string,
     @Body() updateInvoiceDto: UpdateInvoiceDto,
@@ -58,6 +63,7 @@ export class InvoiceController {
   }
 
   @Delete(':id')
+  @Roles('invoice_delete')
   remove(
     @Param('id') id: string,
     @Body() cancelledInvoiceDto: CancelledInvoiceDto,
